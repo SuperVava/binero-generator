@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ArrayGenerator {
     int[][] array;
@@ -12,13 +11,14 @@ public class ArrayGenerator {
 
     public int[][] getArray() {
         for (int i = 0; i < size; i++) {
-            while (!lineOk(array[i])) {
+            while (!lineEqual(array[i])) {
                 array[i] = toBinary((int) (Math.random() * (Math.pow(2, size) - 1)));
             }
         }
         array = equaliseLine(array);
-        System.out.println(checkEqualLine(array));
-        return array;
+        int[][] newArray = clearedArray(array);
+        System.out.println(checkEqualLine(newArray));
+        return newArray;
     }
 
     public int[][] equaliseLine(int[][] array) {
@@ -79,7 +79,8 @@ public class ArrayGenerator {
         return newArray;
     }
 
-    private boolean lineOk(int[]line){
+    private boolean lineEqual(int[]line){
+        //check if line number are equals
         int numberOneCounter = 0;
         for (int number : line) numberOneCounter += number;
         return numberOneCounter == size / 2;
@@ -99,4 +100,28 @@ public class ArrayGenerator {
         }
         return true;
     }
+    
+    private int[][] clearedArray(int[][]array){
+        for (int i = 0; i < size; i++) {
+            //chaque ligne
+            int counter = 0;
+            for(int number : array[i]){
+                if(counter > 1){
+                    int checkNumber = number + array[i][counter - 1] + array[i][counter - 2];
+                    if(checkNumber == 0) array[i][counter] = 1;
+                    else if(checkNumber == 3) array[i][counter] = 0;
+                }
+                if(i>1){
+                    int checkNumber = number + array[i - 1][counter] + array[i - 2][counter];
+                    if(checkNumber == 0) array[i][counter] = 1;
+                    else if(checkNumber == 3) array[i][counter] = 0;
+                }
+                counter ++;
+            }
+        }
+        return array;
+    }
+
+
+    
 }
